@@ -1,6 +1,15 @@
 # Compiled class file
 *.class
 
+# Eclipse files
+*.classpath
+bin/
+.settings/
+.project
+
+# Maven files
+target/**
+
 # Log file
 *.log
 
