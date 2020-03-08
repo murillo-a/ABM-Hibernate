@@ -1,6 +1,8 @@
 package com.ada.Hibernate.dto;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +14,8 @@ import javax.persistence.UniqueConstraint;
 
 
 @Entity
-@Table(name = "Employee", uniqueConstraints = {
-		@UniqueConstraint(columnNames = "ID"),
-		@UniqueConstraint(columnNames = "EMAIL") })
+@Table(name = "persona", uniqueConstraints = {
+		@UniqueConstraint(columnNames = "ID") })
 public class PersonaEntity implements Serializable {
 	
 	private static final long serialVersionUID = -1798070786993154676L;
@@ -22,46 +23,52 @@ public class PersonaEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
-	private Integer employeeId;
+	private Integer id;
+
+	@Column(name = "NOMBRE", unique = false, nullable = false, length = 100)
+	private String nombre;
 	
-	@Column(name = "EMAIL", unique = true, nullable = false, length = 100)
-	private String email;
+	@Column(name = "EDAD", unique = false, nullable = false, length = 3)
+	private Integer edad;
 	
-	@Column(name = "FIRST_NAME", unique = false, nullable = false, length = 100)
-	private String firstName;
+	@Column(name = "FECHA_NACIMIENTO", unique = false, nullable = false)
+	private Date fechaNacimiento;
+
+
+	public String getFechaNacimiento() {
+		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
+		String fechaNacimientoStr = sdfDMY.format(this.fechaNacimiento);
+		return fechaNacimientoStr;
+	}
+
+	public void setFechaNacimiento(Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setPersonaId(Integer id) {
+		this.id = id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 	
-	@Column(name = "LAST_NAME", unique = false, nullable = false, length = 100)
-	private String lastName;
-
-	public Integer getEmployeeId() {
-		return employeeId;
+	public int getEdad() {
+		return edad;
 	}
 
-	public void setEmployeeId(Integer employeeId) {
-		this.employeeId = employeeId;
+	public void setEdad(int edad) {
+		this.edad = edad;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+	
+	
 }

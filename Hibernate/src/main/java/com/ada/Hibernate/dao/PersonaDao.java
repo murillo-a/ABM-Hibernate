@@ -10,37 +10,23 @@ import com.ada.Hibernate.HibernateUtil;
 import com.ada.Hibernate.dto.PersonaEntity;
 
 public class PersonaDao {
-	
-	public void insertEmployee(PersonaEntity emp) {
-		Session session = HibernateUtil.getSessionFactory().openSession();
+
+	public void insertOrUpdate(Session session, PersonaEntity persona) {
 		session.beginTransaction();
-		session.saveOrUpdate(emp);
+		session.saveOrUpdate(persona);
 		session.getTransaction().commit();
 		HibernateUtil.shutdown();
 	}
+
 	
-	public List<PersonaEntity> getAllEmployee() {
-		Session sesn = HibernateUtil.getSessionFactory().openSession();
-		List<PersonaEntity> emplo = new ArrayList<PersonaEntity>();
-		try {
-			emplo = sesn.createQuery("From EmployeeEntity").list();
-			for (PersonaEntity emp : emplo) {
-				System.out.println(emp.getFirstName() + " " + emp.getLastName());
-			}
-		} catch (HibernateException e) {
-			e.printStackTrace();
-		} finally {
-			sesn.close();
-		}
+	public List<PersonaEntity> getPersonaList(Session session) {
+		List<PersonaEntity> personalist = new ArrayList<PersonaEntity>();
 
+		personalist = session.createQuery("From PersonaEntity").list();
+		session.close();
 		HibernateUtil.shutdown();
-		return emplo;
+		return personalist;
+
 	}
-
-	public void insertPersona(PersonaEntity persona) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
+	
 }
