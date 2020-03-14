@@ -11,22 +11,46 @@ import com.ada.Hibernate.dto.PersonaEntity;
 
 public class PersonaDao {
 
-	public void insertOrUpdate(Session session, PersonaEntity persona) {
+	public void insertOrUpdate(Session session, PersonaEntity persona) { //saveOrUpdate
 		session.beginTransaction();
 		session.saveOrUpdate(persona);
 		session.getTransaction().commit();
-		HibernateUtil.shutdown();
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public List<PersonaEntity> getPersonaList(Session session) {
-		List<PersonaEntity> personalist = new ArrayList<PersonaEntity>();
-
-		personalist = session.createQuery("From PersonaEntity").list();
-		session.close();
-		HibernateUtil.shutdown();
-		return personalist;
+		List<PersonaEntity> personaList = new ArrayList<PersonaEntity>();
+		personaList = session.createQuery("From PersonaEntity").list();
+		return personaList;
 
 	}
 	
+	public PersonaEntity getPersona(Session session, int id) {
+		PersonaEntity persona = (PersonaEntity) session.createQuery("FROM PersonaEntity WHERE ID = " + id).uniqueResult();
+		return persona;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonaEntity> buscarPorNombre(Session session, String nombre) {
+		List<PersonaEntity> personaList = new ArrayList<PersonaEntity>();
+		personaList = session.createQuery("FROM PersonaEntity WHERE NOMBRE = '" + nombre + "'").list();
+		return personaList;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonaEntity> buscarPorEdad(Session session, int edad) {
+		List<PersonaEntity> personaList = new ArrayList<PersonaEntity>();
+		personaList = session.createQuery("FROM PersonaEntity WHERE EDAD = " + edad).list();
+		return personaList;
+
+	}
+	
+	public void delete(Session session, PersonaEntity persona) {
+		session.beginTransaction();
+		session.delete(persona);
+		session.getTransaction().commit();
+	}
 }

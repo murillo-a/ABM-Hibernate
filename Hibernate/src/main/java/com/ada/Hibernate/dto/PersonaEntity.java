@@ -35,10 +35,14 @@ public class PersonaEntity implements Serializable {
 	private Date fechaNacimiento;
 
 
-	public String getFechaNacimiento() {
+	public String getFechaNacimientoStr() {
 		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
 		String fechaNacimientoStr = sdfDMY.format(this.fechaNacimiento);
 		return fechaNacimientoStr;
+	}
+	
+	public Date getFechaNacimiento() {
+		return fechaNacimiento;
 	}
 
 	public void setFechaNacimiento(Date fechaNacimiento) {

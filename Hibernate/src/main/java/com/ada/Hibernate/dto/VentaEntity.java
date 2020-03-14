@@ -32,8 +32,36 @@ public class VentaEntity implements Serializable {
 	private Float importe;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_PERSONA", nullable = false)
+	@JoinColumn(name = "ID_PERSONA", unique = false, nullable = false) //puede aparecer el mismo ID en varias ventas, en la tabla ventas
 	private PersonaEntity persona;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public Date getFechaVenta() {
+		return fechaVenta;
+	}
+
+	public void setFechaVenta(Date fechaVenta) {
+		this.fechaVenta = fechaVenta;
+	}
+
+	public Float getImporte() {
+		return importe;
+	}
+
+	public void setImporte(Float importe) {
+		this.importe = importe;
+	}
+
+	public PersonaEntity getPersona() {
+		return persona;
+	}
+
+	public void setPersona(PersonaEntity persona) {
+		this.persona = persona;
+	}
 	
 
 }
