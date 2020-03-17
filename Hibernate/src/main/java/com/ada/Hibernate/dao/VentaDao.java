@@ -15,10 +15,10 @@ public class VentaDao {
 		session.getTransaction().commit();
 	}
 
-	public VentaEntity getVenta() {
+	public VentaEntity getVenta(Session session, int id) {
 		
-		//TODO
-		
+		VentaEntity venta = (VentaEntity) session.createQuery("FROM VentaEntity WHERE ID = " + id).uniqueResult();
+		return venta;
 	}
 	
 	
