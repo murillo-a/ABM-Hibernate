@@ -21,9 +21,7 @@ import com.ada.Hibernate.dto.VentaEntity;
 
 public class Main {
 
-	// DAo como atributo
-
-	static PersonaDao personaDao = new PersonaDao(); // puede ser estatico
+	static PersonaDao personaDao = new PersonaDao(); 
 
 	public static void main(String[] args) {
 		System.out.println("SISTEMA DE PERSONAS (ABM)");
@@ -67,22 +65,20 @@ public class Main {
 	}
 
 	private static void venta(Session session, Scanner sc) {
-		// TODO PASAR A HIBERNATE
 
 		// metodo verificar q existe registro (hay registro? devuelve boolean)
 
 		System.out.print("VENTA\nIngrese ID de la persona: ");
 		int idPersona = sc.nextInt();
-		// TODO mostrar persona
+		// mostrar persona
 		PersonaEntity persona = personaDao.getPersona(session, idPersona);
+		if (persona != null) {
 		System.out.println("Ha seleccionado a: " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
 				+ " " + persona.getFechaNacimiento());
 
 		System.out.print("Ingrese importe de la venta: ");
 		Float importe = sc.nextFloat();
 		Date dateVenta = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String fechaString = sdf.format(dateVenta);
 		VentaEntity venta = new VentaEntity();
 		venta.setFechaVenta(dateVenta);
 		venta.setImporte(importe); // hay que ingresarlo con coma, o punto dependiendo de la cfg de la maquina
@@ -91,24 +87,17 @@ public class Main {
 		VentaDao ventaDao = new VentaDao();
 		ventaDao.insertOrUpdate(session, venta);
 
-		// TODO mostrar ID de venta
-
 		System.out.println("Se ha registrado la venta ");
-
+		}
+		else {
+			System.out.println("No existe persona con el ID #" + idPersona + "\n");
+		}
+		
 	}
 
 	private static void buscarRegistro(Session session, Scanner sc) {
-		// TODO Auto-generated method stub
-
-		/*
-		 * System.out.print("VENTA\nIngrese ID de la persona: "); int idPersona =
-		 * sc.nextInt(); // TODO mostrar persona PersonaEntity persona =
-		 * personaDao.getPersona(session, idPersona).get(0);
-		 * System.out.println("Ha seleccionado a: " + persona.getId() + " " +
-		 * persona.getNombre() + " " + persona.getEdad() + " " +
-		 * persona.getFechaNacimiento() );
-		 */
-		int opcion;
+		
+		int opcion = 1;
 		do {
 
 			System.out.println(
@@ -119,21 +108,28 @@ public class Main {
 				String nombre = pedirNombre(sc);
 				List <PersonaEntity> personaList = personaDao.buscarPorNombre(session, nombre);
 				mostrarList(session, personaList);
+				pedirOpcion(sc);
 				break;
 			case 2:
 				int edad = pedirEdad(sc);
 				personaList = personaDao.buscarPorEdad(session, edad);
 				mostrarList(session, personaList);
+				pedirOpcion(sc);
 				break;
 			default:
-				System.out.println("Ingrese un número de opción válido.");
+				
 				break;
 
 			}
-			System.out.println("Ingrese 1 para buscar otro registro, otro número para volver al menu: ");
-			opcion = sc.nextInt();
+			
 		} while (opcion == 1);
 
+	}
+
+	private static int pedirOpcion(Scanner sc) {
+		System.out.println("Ingrese 1 para buscar un registro, otro número para volver al menu: ");
+		int opcion = sc.nextInt();
+		return opcion;
 	}
 
 	private static void mostrarList(Session session, List<PersonaEntity> personaList) {
@@ -171,7 +167,7 @@ public class Main {
 	private static void baja(Session session, Scanner sc) {
 		System.out.print("Ingrese ID para dar de baja: ");
 		int id = sc.nextInt();
-		// show
+		// mostrar
 		PersonaEntity persona = personaDao.getPersona(session, id);
 		System.out.println("Ha seleccionado a " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
 				+ " " + persona.getFechaNacimientoStr());
