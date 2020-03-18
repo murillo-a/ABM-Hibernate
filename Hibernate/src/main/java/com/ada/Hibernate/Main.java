@@ -183,7 +183,13 @@ public class Main {
 
 	private static void modificacion(Session session, Scanner sc) {
 		// TODO Auto-generated method stub
-
+		System.out.print("Ingrese ID para modificar registro: ");
+		int id = sc.nextInt();
+		// mostrar
+		PersonaEntity persona = personaDao.getPersona(session, id);
+		System.out.println("Ha seleccionado a " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
+				+ " " + persona.getFechaNacimientoStr());
+		System.out.print("Desea dar de baja a esta persona?\nIngrese 1 para continuar, otro número para ver menu: ");
 	}
 
 	private static int mostrarMenu(Scanner sc) {
