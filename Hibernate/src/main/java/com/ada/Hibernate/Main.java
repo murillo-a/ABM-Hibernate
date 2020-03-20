@@ -1,9 +1,5 @@
 package com.ada.Hibernate;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,7 +17,8 @@ import com.ada.Hibernate.dto.VentaEntity;
 
 public class Main {
 
-	static PersonaDao personaDao = new PersonaDao(); 
+	static PersonaDao personaDao = new PersonaDao();
+	static VentaDao ventaDao = new VentaDao();
 
 	public static void main(String[] args) {
 		System.out.println("SISTEMA DE PERSONAS (ABM)");
@@ -70,33 +67,41 @@ public class Main {
 
 		System.out.print("VENTA\nIngrese ID de la persona: ");
 		int idPersona = sc.nextInt();
-		// mostrar persona
+		// mostrar persona s
 		PersonaEntity persona = personaDao.getPersona(session, idPersona);
 		if (persona != null) {
-		System.out.println("Ha seleccionado a: " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
-				+ " " + persona.getFechaNacimiento());
+			mostrarSeleccion(persona);
+			// venta
+			System.out.print("Ingrese importe de la venta: ");
+			Float importe = sc.nextFloat();
+			Date dateVenta = new Date();
+			VentaEntity venta = new VentaEntity();
+			venta.setFechaVenta(dateVenta);
+			venta.setImporte(importe); // hay que ingresarlo con coma, o punto dependiendo de la cfg de la maquina
+			venta.setPersona(persona);
 
-		System.out.print("Ingrese importe de la venta: ");
-		Float importe = sc.nextFloat();
-		Date dateVenta = new Date();
-		VentaEntity venta = new VentaEntity();
-		venta.setFechaVenta(dateVenta);
-		venta.setImporte(importe); // hay que ingresarlo con coma, o punto dependiendo de la cfg de la maquina
-		venta.setPersona(persona);
+			ventaDao.insertOrUpdate(session, venta);
 
-		VentaDao ventaDao = new VentaDao();
-		ventaDao.insertOrUpdate(session, venta);
-
-		System.out.println("Se ha registrado la venta ");
-		}
-		else {
+			System.out.println("Se ha registrado la venta ");
+		} else {
 			System.out.println("No existe persona con el ID #" + idPersona + "\n");
 		}
-		
+
+	}
+
+	private static void mostrarSeleccion(PersonaEntity persona) {
+		System.out.println("Ha seleccionado a: " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
+				+ " " + dateToString(persona.getFechaNacimiento()));
+	}
+
+	private static String dateToString(Date date) {
+		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
+		String fechaStr = sdfDMY.format(date);
+		return fechaStr;
 	}
 
 	private static void buscarRegistro(Session session, Scanner sc) {
-		
+
 		int opcion = 1;
 		do {
 
@@ -106,7 +111,7 @@ public class Main {
 			switch (opcion) {
 			case 1:
 				String nombre = pedirNombre(sc);
-				List <PersonaEntity> personaList = personaDao.buscarPorNombre(session, nombre);
+				List<PersonaEntity> personaList = personaDao.buscarPorNombre(session, nombre);
 				mostrarList(session, personaList);
 				pedirOpcion(sc);
 				break;
@@ -117,11 +122,11 @@ public class Main {
 				pedirOpcion(sc);
 				break;
 			default:
-				
+
 				break;
 
 			}
-			
+
 		} while (opcion == 1);
 
 	}
@@ -133,10 +138,10 @@ public class Main {
 	}
 
 	private static void mostrarList(Session session, List<PersonaEntity> personaList) {
-	for	(PersonaEntity pers : personaList) {
-			System.out.println(
-					pers.getId() + " " + pers.getNombre() + " " + pers.getEdad() + " " + pers.getFechaNacimientoStr());
-	}
+		for (PersonaEntity persona : personaList) {
+			System.out.println(persona.getId() + " " + persona.getNombre() + " " + persona.getEdad() + " "
+					+ dateToString(persona.getFechaNacimiento()));
+		}
 	}
 
 	private static String pedirNombre(Scanner sc) {
@@ -156,9 +161,9 @@ public class Main {
 		System.out.println("LISTADO:");
 		System.out.println("ID - NOMBRE - EDAD - F.NACIMIENTO\n");
 
-		for (PersonaEntity pers : personaDao.getPersonaList(session)) {
-			System.out.println(
-					pers.getId() + " " + pers.getNombre() + " " + pers.getEdad() + " " + pers.getFechaNacimientoStr());
+		for (PersonaEntity persona : personaDao.getPersonaList(session)) {
+			System.out.println(persona.getId() + " " + persona.getNombre() + " " + persona.getEdad() + " "
+					+ dateToString(persona.getFechaNacimiento()));
 		}
 
 		System.out.println("\nFIN LISTADO------------\n");
@@ -169,8 +174,7 @@ public class Main {
 		int id = sc.nextInt();
 		// mostrar
 		PersonaEntity persona = personaDao.getPersona(session, id);
-		System.out.println("Ha seleccionado a " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
-				+ " " + persona.getFechaNacimientoStr());
+		mostrarSeleccion(persona);
 		System.out.print("Desea dar de baja a esta persona?\nIngrese 1 para continuar, otro número para ver menu: ");
 		int opcion = sc.nextInt();
 		if (opcion == 1) {
@@ -183,13 +187,74 @@ public class Main {
 
 	private static void modificacion(Session session, Scanner sc) {
 		// TODO Auto-generated method stub
-		System.out.print("Ingrese ID para modificar registro: ");
+		int opcion;
+		int id;
+		do {
+			System.out.print("Ingrese ID para modificar registro: ");
+			id = sc.nextInt();
+			// mostrar
+			PersonaEntity persona = personaDao.getPersona(session, id);
+			mostrarSeleccion(persona);
+			System.out.print("Desea modificar este registro?\nIngrese 1 para continuar, otro número para ver menu: ");
+			opcion = sc.nextInt();
+			persona.setPersonaId(id);
+			if (opcion == 1) {
+				System.out.println(
+						"1: modificar nombre\n2: modificar fecha de nacimiento\n3: nombre y fecha de nacimiento");
+				opcion = sc.nextInt();
+				System.out.println("VALOR(ES) NUEVOS: ");
+				switch (opcion) {
+				case 1:
+					modificarNombre(sc, persona, session);
+					break;
+				case 2:
+					modificarFecha(sc, persona, session);
+					break;
+				case 3:
+					modificarNombre(sc, persona, session);
+					modificarFecha(sc, persona, session);
+
+					break;
+				default:
+					break;
+				}
+			}
+			System.out.print("Ingrese 1 para modificar otro registro, otro número para ver menu: ");
+			opcion = sc.nextInt();
+		} while (opcion == 1);
+	}
+	
+
+	private static void modificarNombre(Scanner sc, PersonaEntity persona, Session session) {
+		
+		String nombre = pedirNombre(sc);
+		persona.setNombre(nombre);
+		personaDao.insertOrUpdate(session, persona);
+	}
+
+	private static void modificarFecha(Scanner sc, PersonaEntity persona, Session session) {
+		String fechaNacString = pedirFechaNac(sc);
+		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+			Date fechaNac = sdfDMY.parse(fechaNacString);
+
+			int edad = calcularEdad(fechaNac);
+
+			persona.setEdad(edad);
+			persona.setFechaNacimiento(fechaNac);
+			personaDao = new PersonaDao();
+
+			personaDao.insertOrUpdate(session, persona);
+			persona.setFechaNacimiento(fechaNac);
+		} catch (ParseException e) {
+			System.out.println("Ha ocurrido un error con la fecha.");
+		}
+		}
+
+	private static int pedirId(Scanner sc) {
+		System.out.println("Ingrese el ID de la persona: ");
 		int id = sc.nextInt();
-		// mostrar
-		PersonaEntity persona = personaDao.getPersona(session, id);
-		System.out.println("Ha seleccionado a " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
-				+ " " + persona.getFechaNacimientoStr());
-		System.out.print("Desea dar de baja a esta persona?\nIngrese 1 para continuar, otro número para ver menu: ");
+		return id;
 	}
 
 	private static int mostrarMenu(Scanner sc) {
@@ -200,18 +265,23 @@ public class Main {
 		return opcion;
 	}
 
+	private static String pedirFechaNac(Scanner sc) {
+		System.out.print("Ingrese fecha nacimiento (dd/mm/aaaa): ");
+		String fechaNacimientoString = sc.next();
+		return fechaNacimientoString;
+	}
+
 	private static void alta(Session session, Scanner sc) {
 		System.out.println("ALTA DE PERSONA:");
 		String nombre = pedirNombre(sc);
-		System.out.print("Ingrese fecha nacimiento (dd/mm/aaaa): ");
-		String fechaNacimientoString = sc.next();
+		String fechaNacimientoString = pedirFechaNac(sc);
 
 		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
-		SimpleDateFormat sdfYMD = new SimpleDateFormat("yyyy-MM-dd");
+		// SimpleDateFormat sdfYMD = new SimpleDateFormat("yyyy-MM-dd");
 
 		try {
 			Date fechaNac = sdfDMY.parse(fechaNacimientoString);
-			fechaNacimientoString = sdfYMD.format(fechaNac);
+			// fechaNacimientoString = sdfYMD.format(fechaNac);
 			int edad = calcularEdad(fechaNac);
 
 			PersonaEntity persona = new PersonaEntity();

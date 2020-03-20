@@ -34,12 +34,6 @@ public class PersonaEntity implements Serializable {
 	@Column(name = "FECHA_NACIMIENTO", unique = false, nullable = false)
 	private Date fechaNacimiento;
 
-
-	public String getFechaNacimientoStr() {
-		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
-		String fechaNacimientoStr = sdfDMY.format(this.fechaNacimiento);
-		return fechaNacimientoStr;
-	}
 	
 	public Date getFechaNacimiento() {
 		return fechaNacimiento;
