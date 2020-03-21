@@ -112,13 +112,14 @@ public class Main {
 			case 1:
 				String nombre = pedirNombre(sc);
 				List<PersonaEntity> personaList = personaDao.buscarPorNombre(session, nombre);
-				mostrarList(session, personaList);
+				mostrar(personaList);
 				pedirOpcion(sc);
 				break;
-			case 2:
-				int edad = pedirEdad(sc);
+			case 2:				
+				System.out.print("Ingrese la edad: ");
+				int edad = sc.nextInt();
 				personaList = personaDao.buscarPorEdad(session, edad);
-				mostrarList(session, personaList);
+				mostrar(personaList);
 				pedirOpcion(sc);
 				break;
 			default:
@@ -137,7 +138,7 @@ public class Main {
 		return opcion;
 	}
 
-	private static void mostrarList(Session session, List<PersonaEntity> personaList) {
+	private static void mostrar(List<PersonaEntity> personaList) {
 		for (PersonaEntity persona : personaList) {
 			System.out.println(persona.getId() + " " + persona.getNombre() + " " + persona.getEdad() + " "
 					+ dateToString(persona.getFechaNacimiento()));
@@ -148,12 +149,6 @@ public class Main {
 		System.out.print("Ingrese el nombre: ");
 		String nombre = sc.next();
 		return nombre;
-	}
-
-	private static int pedirEdad(Scanner sc) {
-		System.out.print("Ingrese la edad: ");
-		int edad = sc.nextInt();
-		return edad;
 	}
 
 	private static void listado(Session session) {
@@ -243,19 +238,12 @@ public class Main {
 			persona.setEdad(edad);
 			persona.setFechaNacimiento(fechaNac);
 			personaDao = new PersonaDao();
-
 			personaDao.insertOrUpdate(session, persona);
 			persona.setFechaNacimiento(fechaNac);
 		} catch (ParseException e) {
 			System.out.println("Ha ocurrido un error con la fecha.");
 		}
 		}
-
-	private static int pedirId(Scanner sc) {
-		System.out.println("Ingrese el ID de la persona: ");
-		int id = sc.nextInt();
-		return id;
-	}
 
 	private static int mostrarMenu(Scanner sc) {
 		System.out.println("MENU OPCIONES:\n");
