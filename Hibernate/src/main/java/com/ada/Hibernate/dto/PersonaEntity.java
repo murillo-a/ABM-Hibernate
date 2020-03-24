@@ -1,7 +1,7 @@
 package com.ada.Hibernate.dto;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -32,14 +32,14 @@ public class PersonaEntity implements Serializable {
 	private Integer edad;
 	
 	@Column(name = "FECHA_NACIMIENTO", unique = false, nullable = false)
-	private Date fechaNacimiento;
+	private LocalDate fechaNacimiento;
 
 	
-	public Date getFechaNacimiento() {
+	public LocalDate getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
-	public void setFechaNacimiento(Date fechaNacimiento) {
+	public void setFechaNacimiento(LocalDate fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 

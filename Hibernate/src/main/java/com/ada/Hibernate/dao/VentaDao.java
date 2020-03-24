@@ -2,9 +2,7 @@ package com.ada.Hibernate.dao;
 
 import org.hibernate.Session;
 
-import com.ada.Hibernate.HibernateUtil;
 import com.ada.Hibernate.dto.VentaEntity;
-
 
 public class VentaDao {
 
