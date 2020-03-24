@@ -226,10 +226,8 @@ public class Main {
 
 	private static void modificarFecha(Scanner sc, PersonaEntity persona, Session session) {
 		String fechaNacString = pedirFechaNac(sc);
-		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
+		LocalDate fechaNac = DateUtil.stringToDate(fechaNacString);
 		try {
-			Date fechaNac = sdfDMY.parse(fechaNacString);
-
 			int edad = DateUtil.calcularEdad(fechaNac);
 
 			persona.setEdad(edad);
@@ -237,9 +235,6 @@ public class Main {
 			personaDao = new PersonaDao();
 			personaDao.insertOrUpdate(session, persona);
 			persona.setFechaNacimiento(fechaNac);
-		} catch (ParseException e) {
-			System.out.println("Ha ocurrido un error con la fecha.");
-		}
 	}
 
 	private static int mostrarMenu(Scanner sc) {
