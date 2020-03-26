@@ -14,6 +14,7 @@ import com.ada.Hibernate.dao.PersonaDao;
 import com.ada.Hibernate.dao.VentaDao;
 import com.ada.Hibernate.dto.PersonaEntity;
 import com.ada.Hibernate.dto.VentaEntity;
+import com.ada.Hibernate.util.HibernateUtil;
 
 public class Main {
 

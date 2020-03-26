@@ -1,4 +1,4 @@
-package com.ada.Hibernate;
+package com.ada.Hibernate.util;
 
 import java.io.File;
 
