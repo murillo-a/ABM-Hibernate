@@ -5,6 +5,7 @@ import com.ada.Hibernate.dto.PersonaEntity;
 import com.ada.Hibernate.dao.VentaDao;
 import com.ada.Hibernate.dto.VentaEntity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -48,10 +49,13 @@ public class AppTestJunit extends TestCase {
 		int listSize0 = list.size();
 		persona.setNombre("TEST");
 		persona.setEdad(30);
-		Date date = new Date();
+		LocalDate date = LocalDate.now();
 		persona.setFechaNacimiento(date);
 		personaDao.insertOrUpdate(session, persona);
 		list = personaDao.getPersonaList(session);
+		if (list != null) {
+			System.out.println("getPersonaList funciona");
+		}
 		int listSize1 = list.size();
 		assertTrue("No se guardó el registro de prueba", listSize1 == listSize0 + 1);
 		personaDao.delete(session, persona);
