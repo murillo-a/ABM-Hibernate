@@ -51,6 +51,7 @@ public class Main {
 				venta(session, sc);
 				break;
 			default:
+				System.out.println("Ingrese un número de opción válido.\n");
 				break;
 			}
 			opcion = mostrarMenu(sc);
@@ -63,11 +64,9 @@ public class Main {
 
 	private static void venta(Session session, Scanner sc) {
 
-		// metodo verificar q existe registro (hay registro? devuelve boolean)
-
 		System.out.print("VENTA\nIngrese ID de la persona: ");
 		int idPersona = sc.nextInt();
-		// mostrar persona s
+		// mostrar persona
 		PersonaEntity persona = personaDao.getPersona(session, idPersona);
 		if (persona != null) {
 			mostrarSeleccion(persona);
@@ -90,8 +89,9 @@ public class Main {
 	}
 
 	private static void mostrarSeleccion(PersonaEntity persona) {
+		String date = DateUtil.dateToString(persona.getFechaNacimiento());
 		System.out.println("Ha seleccionado a: " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
-				+ " " + DateUtil.dateToString(persona.getFechaNacimiento()));
+				+ " " + date);
 	}
 
 
@@ -135,9 +135,11 @@ public class Main {
 	}
 
 	private static void mostrar(List<PersonaEntity> personaList) {
+		String date;
 		for (PersonaEntity persona : personaList) {
+			date = DateUtil.dateToString(persona.getFechaNacimiento());
 			System.out.println(persona.getId() + " " + persona.getNombre() + " " + persona.getEdad() + " "
-					+ DateUtil.dateToString(persona.getFechaNacimiento()));
+					+ date);
 		}
 	}
 
@@ -228,8 +230,8 @@ public class Main {
 		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
 			try {
 			Date fechaNac = sdfDMY.parse(fechaNacString);
-
-			int edad = DateUtil.calcularEdad(fechaNac);
+			Date hoy = new Date();
+			int edad = DateUtil.calcularEdad(fechaNac, hoy);
 
 			persona.setEdad(edad);
 			persona.setFechaNacimiento(fechaNac);
@@ -261,11 +263,11 @@ public class Main {
 		String fechaNacimientoString = pedirFechaNac(sc);
 
 		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
-		// SimpleDateFormat sdfYMD = new SimpleDateFormat("yyyy-MM-dd");
 
 		try {
 			Date fechaNac = sdfDMY.parse(fechaNacimientoString);
-			int edad = DateUtil.calcularEdad(fechaNac);
+			Date hoy = new Date();
+			int edad = DateUtil.calcularEdad(fechaNac, hoy);
 
 			PersonaEntity persona = new PersonaEntity();
 			persona.setNombre(nombre);

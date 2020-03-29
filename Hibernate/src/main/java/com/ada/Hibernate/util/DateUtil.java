@@ -13,10 +13,11 @@ public class DateUtil {
 		return fechaStr;
 	}
 	
-	public static int calcularEdad(Date fechaNac) {
+	public static int calcularEdad(Date fechaNac, Date hoyDate) {
 		GregorianCalendar gc = new GregorianCalendar();
 		GregorianCalendar hoy = new GregorianCalendar();
 		gc.setTime(fechaNac);
+		hoy.setTime(hoyDate);
 		int anioActual = hoy.get(Calendar.YEAR);
 		int anioNacim = gc.get(Calendar.YEAR);
 
