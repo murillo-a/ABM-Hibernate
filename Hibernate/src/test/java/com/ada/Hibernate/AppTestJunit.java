@@ -1,9 +1,9 @@
 package com.ada.Hibernate;
 
 import com.ada.Hibernate.dao.PersonaDao;
-import com.ada.Hibernate.dto.PersonaEntity;
 import com.ada.Hibernate.dao.VentaDao;
-import com.ada.Hibernate.dto.VentaEntity;
+import com.ada.Hibernate.entity.PersonaEntity;
+import com.ada.Hibernate.entity.VentaEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -31,14 +31,22 @@ public class AppTestJunit extends TestCase {
 		return new TestSuite(AppTestJunit.class);
 	}
 
-	/**
-	 * Rigourous Test :-)
-	 */
-	public void testGetPersonaList() {
+	public void testGetPersona() {
 		System.out.println("test 1");
 		List<PersonaEntity> list = personaDao.getPersonaList(session);
 		boolean tieneRegistros = list.size() > 0;
-		assertTrue("No hay registros", tieneRegistros);
+		assertTrue("No hay registros o no se obtiene lista", tieneRegistros);
+		PersonaEntity persona = list.get(0);
+		int id = persona.getId();
+		String nombre = persona.getNombre();
+		int edad = persona.getEdad();
+				
+		personaDao.getPersona(session, id);
+		
+		personaDao.buscarPorNombre(session, nombre);
+		
+		personaDao.buscarPorEdad(session, edad);
+		
 	}
 
 	public void testInsertThenDelete() {
@@ -57,10 +65,6 @@ public class AppTestJunit extends TestCase {
 		list = personaDao.getPersonaList(session);
 		int listSize2 = list.size();
 		assertTrue("No se eliminó el registro de prueba", listSize2 == listSize0);
-	}
-
-	public void testGetPersona() {
-		
 	}
 	
 	public void testCalcularEdad() {

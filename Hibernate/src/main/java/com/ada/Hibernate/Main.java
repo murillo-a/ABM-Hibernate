@@ -2,9 +2,7 @@ package com.ada.Hibernate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,9 +10,10 @@ import org.hibernate.Session;
 
 import com.ada.Hibernate.dao.PersonaDao;
 import com.ada.Hibernate.dao.VentaDao;
-import com.ada.Hibernate.dto.PersonaEntity;
-import com.ada.Hibernate.dto.VentaEntity;
+import com.ada.Hibernate.entity.PersonaEntity;
+import com.ada.Hibernate.entity.VentaEntity;
 import com.ada.Hibernate.util.HibernateUtil;
+import com.ada.Hibernate.util.DateUtil;
 
 public class Main {
 
@@ -92,14 +91,10 @@ public class Main {
 
 	private static void mostrarSeleccion(PersonaEntity persona) {
 		System.out.println("Ha seleccionado a: " + persona.getId() + " " + persona.getNombre() + " " + persona.getEdad()
-				+ " " + dateToString(persona.getFechaNacimiento()));
+				+ " " + DateUtil.dateToString(persona.getFechaNacimiento()));
 	}
 
-	private static String dateToString(Date date) {
-		SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
-		String fechaStr = sdfDMY.format(date);
-		return fechaStr;
-	}
+
 
 	private static void buscarRegistro(Session session, Scanner sc) {
 
@@ -142,7 +137,7 @@ public class Main {
 	private static void mostrar(List<PersonaEntity> personaList) {
 		for (PersonaEntity persona : personaList) {
 			System.out.println(persona.getId() + " " + persona.getNombre() + " " + persona.getEdad() + " "
-					+ dateToString(persona.getFechaNacimiento()));
+					+ DateUtil.dateToString(persona.getFechaNacimiento()));
 		}
 	}
 
@@ -159,7 +154,7 @@ public class Main {
 
 		for (PersonaEntity persona : personaDao.getPersonaList(session)) {
 			System.out.println(persona.getId() + " " + persona.getNombre() + " " + persona.getEdad() + " "
-					+ dateToString(persona.getFechaNacimiento()));
+					+ DateUtil.dateToString(persona.getFechaNacimiento()));
 		}
 
 		System.out.println("\nFIN LISTADO------------\n");
@@ -234,7 +229,7 @@ public class Main {
 			try {
 			Date fechaNac = sdfDMY.parse(fechaNacString);
 
-			int edad = calcularEdad(fechaNac);
+			int edad = DateUtil.calcularEdad(fechaNac);
 
 			persona.setEdad(edad);
 			persona.setFechaNacimiento(fechaNac);
@@ -270,8 +265,7 @@ public class Main {
 
 		try {
 			Date fechaNac = sdfDMY.parse(fechaNacimientoString);
-			// fechaNacimientoString = sdfYMD.format(fechaNac);
-			int edad = calcularEdad(fechaNac);
+			int edad = DateUtil.calcularEdad(fechaNac);
 
 			PersonaEntity persona = new PersonaEntity();
 			persona.setNombre(nombre);
@@ -288,32 +282,6 @@ public class Main {
 			System.out.println("Ha ocurrido un error en el alta.");
 		}
 
-	}
-
-	private static int calcularEdad(Date fechaNac) {
-		GregorianCalendar gc = new GregorianCalendar();
-		GregorianCalendar hoy = new GregorianCalendar();
-		gc.setTime(fechaNac);
-		int anioActual = hoy.get(Calendar.YEAR);
-		int anioNacim = gc.get(Calendar.YEAR);
-
-		int mesActual = hoy.get(Calendar.MONTH);
-		int mesNacim = gc.get(Calendar.MONTH);
-
-		int diaActual = hoy.get(Calendar.DATE);
-		int diaNacim = gc.get(Calendar.DATE);
-
-		int dif = anioActual - anioNacim;
-
-		if (mesActual < mesNacim) {
-			dif -= 1;
-		} else {
-			if (mesActual == mesNacim && diaActual < diaNacim) {
-				dif -= 1;
-			}
-		}
-
-		return dif;
 	}
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
-import com.ada.Hibernate.dto.PersonaEntity;
+import com.ada.Hibernate.entity.PersonaEntity;
 import com.ada.Hibernate.util.HibernateUtil;
 
 public class PersonaDao {

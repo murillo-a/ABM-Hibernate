@@ -1,4 +1,4 @@
-package com.ada.Hibernate.dto;
+package com.ada.Hibernate.entity;
 
 import java.io.Serializable;
 import java.util.Date;
